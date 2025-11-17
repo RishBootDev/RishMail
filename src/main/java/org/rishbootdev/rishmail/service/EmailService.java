@@ -13,6 +13,7 @@ public class EmailService {
     private final ChatClient chatClient;
 
     public String generateEmailReply(EmailRequest emailRequest) {
+
         return "";
     }
 }
