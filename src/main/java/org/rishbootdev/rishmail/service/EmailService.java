@@ -16,8 +16,9 @@ public class EmailService {
 
     private final ChatClient chatClient;
 
-    public Flux<String> generateEmailReply(EmailRequest emailRequest) {
+    public Flux<String> generateEmailReply(String emailContent,String tone) {
 
+        EmailRequest emailRequest=new EmailRequest(emailContent,tone);
         String prompt=buildPrompt(emailRequest);
 
        String requestBody=String.format("""
@@ -42,13 +43,13 @@ public class EmailService {
                         .mapToObj(c->String.valueOf((char)c))
                         .iterator()))
                 .concatMap(ch -> Mono.just(ch)
-                        .delayElement(Duration.ofMillis(10)));
+                        .delayElement(Duration.ofMillis(5)));
 
     }
     public String buildPrompt(EmailRequest emailRequest){
 
         StringBuilder prompt=new StringBuilder();
-        prompt.append("Generate a professional email reply for the following email:");
+        prompt.append("Generate a email reply for the following email and please assume that the email is written for you and you are a person replying this email:");
         if(emailRequest.getTone() != null && !emailRequest.getTone().isEmpty()){
             prompt.append("Use a ")
                     .append(emailRequest.getTone())
